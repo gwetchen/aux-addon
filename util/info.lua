@@ -174,37 +174,49 @@ end
 
 function M.set_tooltip(itemstring, owner, anchor)
     GameTooltip:SetOwner(owner, anchor)
+    local name, _, quality = GetItemInfo(itemstring)
+    if name then
+        local hex = aux.select(4, GetItemQualityColor(quality))
+        local link = hex ..  '|H' .. itemstring .. '|h[' .. name .. ']|h' .. FONT_COLOR_CODE_CLOSE
+        GameTooltip.itemLink = link
+    end
+    GameTooltip.itemID = parse_link(itemstring)
     GameTooltip:SetHyperlink(itemstring)
 end
 
 function M.set_shopping_tooltip(slot)
     local index1, index2 = inventory_index(slot)
     local tooltips = T.temp-T.acquire()
+    local link1, link2, id1, id2
     if index1 then
         local tooltip = tooltip('inventory', 'player', index1)
         if getn(tooltip) > 0 then
             tinsert(tooltips, tooltip)
         end
+        link1 = GetInventoryItemLink("player", index1)
+        id1 = parse_link(link1)
     end
     if index2 then
         local tooltip = tooltip('inventory', 'player', index2)
         if getn(tooltip) > 0 then
             tinsert(tooltips, tooltip)
         end
+        link2 = GetInventoryItemLink("player", index2)
+        id2 = parse_link(link2)
     end
 
     if tooltips[1] then
         tinsert(tooltips[1], 1, T.temp-T.map('left_text', 'Currently Equipped', 'left_color', T.temp-T.list(.5, .5, .5)))
         ShoppingTooltip1:SetOwner(GameTooltip, 'ANCHOR_NONE')
         ShoppingTooltip1:SetPoint('TOPLEFT', GameTooltip, 'TOPRIGHT', 0, -10)
-        load_tooltip(ShoppingTooltip1, tooltips[1])
+        load_tooltip(ShoppingTooltip1, tooltips[1], link1, id1)
     end
 
     if tooltips[2] then
         tinsert(tooltips[2], 1, T.temp-T.map('left_text', 'Currently Equipped', 'left_color', T.temp-T.list(.5, .5, .5)))
         ShoppingTooltip2:SetOwner(ShoppingTooltip1, 'ANCHOR_NONE')
         ShoppingTooltip2:SetPoint('TOPLEFT', ShoppingTooltip1, 'TOPRIGHT')
-        load_tooltip(ShoppingTooltip2, tooltips[2])
+        load_tooltip(ShoppingTooltip2, tooltips[2], link2, id2)
     end
 end
 
@@ -229,7 +241,7 @@ function M.tooltip_find(pattern, tooltip)
     return count
 end
 
-function M.load_tooltip(frame, tooltip)
+function M.load_tooltip(frame, tooltip, link, id)
     frame:ClearLines()
     for _, line in ipairs(tooltip) do
         if line.right_text then
@@ -239,9 +251,13 @@ function M.load_tooltip(frame, tooltip)
         end
     end
     for i = 1, getn(tooltip) do -- TODO why is this needed?
-	    _G[frame:GetName() .. 'TextLeft' .. i]:SetJustifyH('LEFT')
-	    _G[frame:GetName() .. 'TextRight' .. i]:SetJustifyH('LEFT')
+        if _G[frame:GetName() .. 'TextLeft' .. i] and _G[frame:GetName() .. 'TextRight' .. i] then
+            _G[frame:GetName() .. 'TextLeft' .. i]:SetJustifyH('LEFT')
+            _G[frame:GetName() .. 'TextRight' .. i]:SetJustifyH('LEFT')
+        end
     end
+    frame.itemLink = link
+    frame.itemID = id
     frame:Show()
 end
 
@@ -362,7 +378,7 @@ function M.item_key(link)
 end
 
 function M.parse_link(link)
-    local _, _, item_id, enchant_id, suffix_id, unique_id, name = strfind(link, '|c%x%x%x%x%x%x%x%x|Hitem:(%d*):(%d*):(%d*):(%d*)[:0-9]*|h%[(.-)%]|h|r')
+    local _, _, item_id, enchant_id, suffix_id, unique_id, name = strfind(link or "", '|c%x%x%x%x%x%x%x%x|Hitem:(%d*):(%d*):(%d*):(%d*)[:0-9]*|h%[(.-)%]|h|r')
     return tonumber(item_id) or 0, tonumber(suffix_id) or 0, tonumber(unique_id) or 0, tonumber(enchant_id) or 0, name
 end
 

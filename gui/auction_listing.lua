@@ -567,7 +567,7 @@ local methods = {
         local row = this:GetParent().row
         if row.record then
 	        GameTooltip:SetOwner(this, 'ANCHOR_RIGHT')
-            info.load_tooltip(GameTooltip, row.record.tooltip)
+            info.load_tooltip(GameTooltip, row.record.tooltip, row.record.link, row.record.item_id)
 	        tooltip.extend_tooltip(GameTooltip, row.record.link, row.record.aux_quantity)
             info.set_shopping_tooltip(row.record.slot)
         end
