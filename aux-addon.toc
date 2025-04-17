@@ -1,6 +1,6 @@
 ## Interface: 11200
 ## Author: shirsig
-## OptionalDeps: ShaguTweaks
+## OptionalDeps: ShaguTweaks, Informant, pfUI
 ## Title: aux
 ## Notes: Auction House replacement
 ## SavedVariables: aux

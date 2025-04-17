@@ -40,7 +40,7 @@ frame.buyout_listing:SetPoint('BOTTOMRIGHT', 0, 0)
 
 do
     local checkbox = gui.checkbox(frame.inventory)
-    checkbox:SetPoint('TOPLEFT', 49, -15)
+    checkbox:SetPoint('TOPLEFT', 10, -2) --byCFM
     checkbox:SetScript('OnClick', function()
         refresh = true
     end)
@@ -61,6 +61,45 @@ do
 	    function()
 	        if arg1 == 'LeftButton' then
 	            update_item(this.item_record)
+				if Informant then --byCFM
+					local id =this.item_record.item_id
+					local itdata = Informant.GetItem(id)
+					local str=nil
+					if (itdata and itdata['buy'] and itdata['buy'] ~= 0) then str=itdata['sell'] end
+					if str then
+						local gold,silver,copper=money.to_gsc(str)
+						str = gold.."|cffffd70ag.|r"..silver.."|cffc7c7cfs.|r"..copper.."|cffeda55fc|r"
+					end
+					if LABELFORITEM==nil then LABELFORITEM=gui.label(f, gui.font_size.small) end
+					LABELFORITEM:SetPoint('TOP', f, 'LEFT', 120, 200)
+					if str==nil then str="?" end
+					LABELFORITEM:SetText("Vendor price:"..str)
+				elseif ShaguTweaks and ShaguTweaks.SellValueDB[this.item_record.item_id] ~= nil then
+					local str=nil
+					local itdata=nil
+					local itdata = ShaguTweaks.SellValueDB[this.item_record.item_id]
+					if itdata then
+						local gold,silver,copper=money.to_gsc(itdata)
+						str = gold.."|cffffd70ag.|r"..silver.."|cffc7c7cfs.|r"..copper.."|cffeda55fc|r"
+					end
+					if LABELFORITEM==nil then LABELFORITEM=gui.label(f, gui.font_size.small) end
+					LABELFORITEM:SetPoint('TOP', f, 'LEFT', 120, 200)
+					if str==nil then str="?" end
+					LABELFORITEM:SetText("Vendor price:"..str)
+				elseif pfUI and pfSellData[this.item_record.item_id] then
+					local str=nil
+					local itdata=nil
+					local _, _, itdata = strfind(pfSellData[this.item_record.item_id], "(.*),(.*)")
+					if itdata then
+						itdata = tonumber(itdata)
+						local gold,silver,copper=money.to_gsc(itdata)
+						str = gold.."|cffffd70ag.|r"..silver.."|cffc7c7cfs.|r"..copper.."|cffeda55fc|r"
+					end
+					if LABELFORITEM==nil then LABELFORITEM=gui.label(f, gui.font_size.small) end
+					LABELFORITEM:SetPoint('TOP', f, 'LEFT', 120, 200)
+					if str==nil then str="?" end
+					LABELFORITEM:SetText("Vendor price:"..str)
+				end --byCFM
 	        elseif arg1 == 'RightButton' then
 	            aux.set_tab(1)
 	            search_tab.set_filter(strlower(info.item(this.item_record.item_id).name) .. '/exact')

@@ -88,9 +88,9 @@ function post_auction(slot, k)
 				local tmp = tostring(aux.account_data.merchant_buy[item_info.item_id])
 				tmp = strsub(tmp,1,-3)
 				start_price = max(start_price,tonumber(tmp) * 1.1)
-				buyout_price = max(buyout_price,tonumber(tmp) * 1.15)		
+				buyout_price = max(buyout_price,tonumber(tmp) * 1.15)
 			else 
-				if aux.account_data.merchant_sell[item_info.item_id] ~= nil then 		
+				if aux.account_data.merchant_sell[item_info.item_id] ~= nil then 
 					vendor_price = tonumber(aux.account_data.merchant_sell[item_info.item_id])
 				elseif ShaguTweaks and ShaguTweaks.SellValueDB[item_info.item_id] ~= nil then
 					local charges = 1
