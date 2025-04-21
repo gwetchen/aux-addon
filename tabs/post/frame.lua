@@ -60,46 +60,28 @@ do
 		f,
 	    function()
 	        if arg1 == 'LeftButton' then
-	            update_item(this.item_record)
-				if Informant then --byCFM
-					local id =this.item_record.item_id
+                update_item(this.item_record)
+                local str=nil--//byCFM
+                local id=this.item_record.item_id
+                if aux.account_data.merchant_sell[id] ~= nil then
+                    str=aux.account_data.merchant_sell[id]
+                elseif Informant then
 					local itdata = Informant.GetItem(id)
-					local str=nil
-					if (itdata and itdata['buy'] and itdata['buy'] ~= 0) then str=itdata['sell'] end
-					if str then
-						local gold,silver,copper=money.to_gsc(str)
-						str = gold.."|cffffd70ag.|r"..silver.."|cffc7c7cfs.|r"..copper.."|cffeda55fc|r"
-					end
-					if LABELFORITEM==nil then LABELFORITEM=gui.label(f, gui.font_size.small) end
-					LABELFORITEM:SetPoint('TOP', f, 'LEFT', 120, 200)
-					if str==nil then str="?" end
-					LABELFORITEM:SetText("Vendor price:"..str)
-				elseif ShaguTweaks and ShaguTweaks.SellValueDB[this.item_record.item_id] ~= nil then
-					local str=nil
-					local itdata=nil
-					local itdata = ShaguTweaks.SellValueDB[this.item_record.item_id]
-					if itdata then
-						local gold,silver,copper=money.to_gsc(itdata)
-						str = gold.."|cffffd70ag.|r"..silver.."|cffc7c7cfs.|r"..copper.."|cffeda55fc|r"
-					end
-					if LABELFORITEM==nil then LABELFORITEM=gui.label(f, gui.font_size.small) end
-					LABELFORITEM:SetPoint('TOP', f, 'LEFT', 120, 200)
-					if str==nil then str="?" end
-					LABELFORITEM:SetText("Vendor price:"..str)
-				elseif pfUI and pfSellData[this.item_record.item_id] then
-					local str=nil
-					local itdata=nil
-					local _, _, itdata = strfind(pfSellData[this.item_record.item_id], "(.*),(.*)")
-					if itdata then
-						itdata = tonumber(itdata)
-						local gold,silver,copper=money.to_gsc(itdata)
-						str = gold.."|cffffd70ag.|r"..silver.."|cffc7c7cfs.|r"..copper.."|cffeda55fc|r"
-					end
-					if LABELFORITEM==nil then LABELFORITEM=gui.label(f, gui.font_size.small) end
-					LABELFORITEM:SetPoint('TOP', f, 'LEFT', 120, 200)
-					if str==nil then str="?" end
-					LABELFORITEM:SetText("Vendor price:"..str)
-				end --byCFM
+					if (itdata and itdata['sell'] and itdata['sell'] ~= 0) then str=itdata['sell'] end
+				elseif ShaguTweaks and ShaguTweaks.SellValueDB[id] ~= nil then
+					str = ShaguTweaks.SellValueDB[id]
+				elseif pfUI and pfSellData[id] then
+					_, _, str = strfind(pfSellData[id], "(.*),(.*)")
+                    str = tonumber(str)
+				end
+                if str then
+                    local gold,silver,copper=money.to_gsc(str)
+                    str = gold..money.GOLD_TEXT..silver..money.SILVER_TEXT..copper..money.COPPER_TEXT
+                end
+                if vendor_price_label==nil then vendor_price_label=gui.label(f, gui.font_size.small) end
+                vendor_price_label:SetPoint('TOP', f, 'LEFT', 120, 200)
+                if str==nil or str=="0"..money.GOLD_TEXT.."0"..money.SILVER_TEXT.."0"..money.COPPER_TEXT then str="?" end
+                vendor_price_label:SetText("Vendor price: "..str) --byCFM\\
 	        elseif arg1 == 'RightButton' then
 	            aux.set_tab(1)
 	            search_tab.set_filter(strlower(info.item(this.item_record.item_id).name) .. '/exact')
