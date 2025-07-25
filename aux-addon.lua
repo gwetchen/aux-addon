@@ -67,6 +67,7 @@ function handle.LOAD()
         post_bid = false,
         post_duration = post.DURATION_24,
 		post_stack = true,
+	undercut = true,
         items = {},
         item_ids = {},
         auctionable_items = {},
