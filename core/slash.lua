@@ -79,6 +79,7 @@ function SlashCmdList.AUX(command)
 	else
 		aux.print('Usage:')
 		aux.print('- scale [' .. aux.color.blue(aux.account_data.scale) .. ']')
+		aux.print('- uc [' .. status(aux.account_data.undercut) .. ']')
 		aux.print('- ignore owner [' .. status(aux.account_data.ignore_owner) .. ']')
 		aux.print('- post bid [' .. status(aux.account_data.post_bid) .. ']')
         aux.print('- post duration [' .. aux.color.blue(aux.account_data.post_duration / 60 * 3 .. 'h') .. ']')
