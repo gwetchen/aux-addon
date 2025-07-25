@@ -390,7 +390,7 @@ end
 function undercut(record, stack_size, stack)
     local price = ceil(record.unit_price * (stack and record.stack_size or stack_size))
     if not record.own then
-	    price = price - 1
+	    --price = price - 1
     end
     return price / stack_size
 end
