@@ -22,6 +22,9 @@ function SlashCmdList.AUX(command)
     	local scale = tonumber(arguments[2])
 	    aux.frame:SetScale(scale)
 	    aux.account_data.scale = scale
+    elseif arguments[1] == 'uc' then
+        aux.account_data.undercut = not aux.account_data.undercut
+	    aux.print('undercutting ' .. status(aux.account_data.undercut))
     elseif arguments[1] == 'ignore' and arguments[2] == 'owner' then
 	    aux.account_data.ignore_owner = not aux.account_data.ignore_owner
         aux.print('ignore owner ' .. status(aux.account_data.ignore_owner))
