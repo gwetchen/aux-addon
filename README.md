@@ -60,6 +60,7 @@ The most advanced auction house addOn for the 1.12 client with some features mor
 ### General
 **/aux** (Lists the settings)<br/>
 **/aux scale _factor_** (Scales the aux GUI by _factor_)<br/>
+**/aux uc** (Toggles automatic undercutting.)<br/>
 **/aux ignore owner** (Disables waiting for owner names when scanning. Recommended)<br/>
 **/aux post bid** (Adds a bid price listing to the post tab)<br/>
 **/aux crafting cost** (Toggles the crafting price information)<br/>
